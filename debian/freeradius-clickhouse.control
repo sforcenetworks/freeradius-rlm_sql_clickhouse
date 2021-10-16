@@ -1,0 +1,10 @@
+
+Package: freeradius-clickhouse
+Architecture: any
+Depends: freeradius (>= ${binary:Version}),
+         ${dist:Depends},
+         ${misc:Depends},
+         ${shlibs:Depends}
+Description: ClickHouse module for FreeRADIUS server
+ The FreeRADIUS server can use ClickHouse to do accounting,
+ and this module is necessary for that.

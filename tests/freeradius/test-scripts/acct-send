@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ACCOUNTING_TYPE="$1"
+ID="${2:-1}"
+
+send() {
+  id=$1
+  sed "s/__ID__/$id/g" "acct-$ACCOUNTING_TYPE.packet.tpl" | radclient localhost acct testing123 -f -
+}
+
+send "$ID"

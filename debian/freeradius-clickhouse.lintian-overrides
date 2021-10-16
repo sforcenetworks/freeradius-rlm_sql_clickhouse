@@ -1,0 +1,6 @@
+# There's plenty in the description of this package to identify
+# what it does.
+freeradius-clickhouse: extended-description-is-probably-too-short
+
+# Plugin
+binary-or-shlib-defines-rpath usr/lib/freeradius/rlm_sql_clickhouse.so *

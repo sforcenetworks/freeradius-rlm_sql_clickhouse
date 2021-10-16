@@ -1,0 +1,14 @@
+#!/bin/sh
+# vim:ts=2:sw=2:et
+
+set -e
+
+case "$1" in
+  configure)
+    invoke-rc.d freeradius force-reload
+    ;;
+esac
+
+#DEBHELPER#
+
+exit 0

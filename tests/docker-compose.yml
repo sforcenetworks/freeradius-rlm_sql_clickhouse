@@ -1,0 +1,36 @@
+version: "3.8"
+services:
+  clickhouse:
+    image: yandex/clickhouse-server:21
+    restart: always
+    ports:
+    - 8123:8123
+    - 9000:9000
+    volumes:
+    - ./clickhouse-server/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+    - test
+
+  freeradius:
+    image: ghcr.io/sforcenetworks/freeradius:for-test
+    command:
+    - /bin/bash
+    - -c
+    - "chown freerad.freerad -R /etc/freeradius/3.0 && chmod o-w -R /etc/freeradius/3.0 && freeradius -X"
+    ports:
+    - "1812:1812/udp"
+    - "1813:1813/udp"
+    volumes:
+    - ./freeradius/sql-clickhouse:/etc/freeradius/3.0/mods-enabled/sql
+    - ./freeradius/clients.conf:/etc/freeradius/3.0/clients.conf
+    networks:
+    - test
+    depends_on:
+    - clickhouse
+
+networks:
+  test:
