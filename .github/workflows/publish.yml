@@ -1,0 +1,31 @@
+name: Publish 
+
+on:
+  push:
+    tags:
+      - "*-sforcenetworks*"
+
+jobs:
+  ci:
+    name: Publish 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: recursive
+
+      - name: Set variables output 
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - uses: earthly/actions/setup-earthly@v1 
+        with:
+          version: v0.5.24
+
+      - name: run integration test with Earthly
+        run: earthly --ci --verbose --allow-privileged +test
+
+      - name: build and publish image
+        env:
+          EARTHLY_TOKEN: ${{ secrets.GHCR_AUTH_TOKEN }}
+        run: earthly --ci --verbose --push +freeradius-image --FREERADIUS_IMAGE_TAG=${{ steps.vars.outputs.tag }}
