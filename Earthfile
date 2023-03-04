@@ -49,7 +49,6 @@ clickhouse-cpp-lib:
 
 freeradius-deb-src:
   ARG FREERADIUS_DEBIAN_SRC_VERSION=3.0.21+dfsg-2.2+deb11u1
-  ARG FREERADIUS_IMAGE_TAG=3.0.21-dfsg-2.2-deb11u1-sforcenetworks1
 
   FROM +debian-builder
   ENV DEBMAIL="Neutron Soutmun <neutron@neutron.in.th>"
@@ -94,6 +93,8 @@ freeradius-deb:
   SAVE ARTIFACT /deb
 
 freeradius-image:
+  ARG FREERADIUS_IMAGE_TAG=3.0.21-dfsg-2.2-deb11u1-sforcenetworks-dev
+
   FROM debian:bullseye-slim
   ENV DEBIAN_FRONTEND=noninteractive
 
