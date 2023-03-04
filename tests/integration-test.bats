@@ -2,8 +2,8 @@
 
 CLICKHOUSE_CLIENT_IMAGE="yandex/clickhouse-client:21"
 CLICKHOUSE_HOST="tcp://clickhouse:9000"
-TEST_PREFIX="tests_"
-TEST_NETWORK="${TEST_PREFIX}test"
+TEST_PREFIX="tests"
+TEST_NETWORK="${TEST_PREFIX}_test"
 
 docker_test_run() {
   docker run --rm --network="$TEST_NETWORK" "$@"
@@ -16,7 +16,7 @@ setup() {
   docker_test_run jwilder/dockerize:latest  \
     -wait "$CLICKHOUSE_HOST" -timeout 10s
 
-  docker cp freeradius/test-scripts "${TEST_PREFIX}freeradius_1:/"
+  docker cp freeradius/test-scripts "${TEST_PREFIX}-freeradius-1:/"
 }
 
 show_tables() {
