@@ -1,8 +1,7 @@
+VERSION 0.7
+
 FROM debian:bullseye
 LABEL maintainer="Neutron Soutmun <neutron@neutron.in.th>"
-
-ARG FREERADIUS_DEBIAN_SRC_VERSION=3.0.21+dfsg-2.2+deb11u1
-ARG FREERADIUS_IMAGE_TAG=3.0.21-dfsg-2.2-deb11u1-sforcenetworks1
 
 debian-builder:
   FROM debian:bullseye
@@ -30,6 +29,7 @@ debian-builder:
 
 clickhouse-cpp-lib:
   FROM +debian-builder
+  ARG LIB_VERSION=v2.3.0
 
   RUN --mount=type=cache,target=/var/cache/apt \
     apt-get install --yes --no-install-recommends \
@@ -39,6 +39,7 @@ clickhouse-cpp-lib:
   RUN git clone https://github.com/ClickHouse/clickhouse-cpp.git
 
   RUN cd clickhouse-cpp \
+    && git checkout "$LIB_VERSION" \
     && cmake . \
     && make \
     && make install
@@ -47,6 +48,9 @@ clickhouse-cpp-lib:
   SAVE ARTIFACT /usr/local/include/clickhouse /include/clickhouse
 
 freeradius-deb-src:
+  ARG FREERADIUS_DEBIAN_SRC_VERSION=3.0.21+dfsg-2.2+deb11u1
+  ARG FREERADIUS_IMAGE_TAG=3.0.21-dfsg-2.2-deb11u1-sforcenetworks1
+
   FROM +debian-builder
   ENV DEBMAIL="Neutron Soutmun <neutron@neutron.in.th>"
 
@@ -116,7 +120,7 @@ freeradius-image:
   SAVE IMAGE --push ghcr.io/sforcenetworks/freeradius:${FREERADIUS_IMAGE_TAG}
 
 test:
-  FROM docker:20.10-dind
+  FROM docker:23.0-dind
 
   RUN apk add --no-cache git bash \
     && git clone https://github.com/bats-core/bats-core.git \
